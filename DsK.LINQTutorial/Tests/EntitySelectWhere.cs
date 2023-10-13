@@ -43,5 +43,16 @@ public static class EntitySelectWhere
         db.Users.Where(x => x.Name.Contains("a")).ToList().ForEach(x => Console.WriteLine(x.Name));
         
         "Lambda Short".EndSection();
+
+
+        "From SQL".StartSection();
+
+        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM User WHERE Name LIKE '%a%'");
+        FromSQLQuery.ToQueryString().ShowQuery();
+        var FromSQLList = FromSQLQuery.ToList();
+        foreach (var user in FromSQLList)
+            Console.WriteLine(user.Name);
+
+        "From SQL".EndSection();
     }
 }

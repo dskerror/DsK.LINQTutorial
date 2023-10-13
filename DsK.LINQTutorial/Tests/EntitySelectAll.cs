@@ -22,6 +22,7 @@ public static class EntitySelectAll
         "LINQ".EndSection();
 
 
+
         "Lambda".StartSection();
 
         var LambdaQuery = db.Users;
@@ -36,10 +37,23 @@ public static class EntitySelectAll
         "Lambda".EndSection();
 
 
+
         "Lambda Short".StartSection();
 
         db.Users.ToList().ForEach(x => Console.WriteLine(x.Name));
 
         "Lambda Short".EndSection();
+
+
+
+        "From SQL".StartSection();
+
+        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM USERS");
+        FromSQLQuery.ToQueryString().ShowQuery();
+        var FromSQLList = FromSQLQuery.ToList();
+        foreach (var user in FromSQLList)
+            Console.WriteLine(user.Name);
+
+        "From SQL".EndSection();
     }
 }

@@ -20,8 +20,8 @@ Update-Database: Executes the last migration file created by the Add-Migration c
 
 https://www.entityframeworktutorial.net/efcore/conventions-in-ef-core.aspx
 https://www.learnentityframeworkcore.com/migrations/seeding
-https://www.learnentityframeworkcore.com/lazy-loading
 https://www.tutorialsteacher.com/linq/linq-method-syntax
+https://linqsamples.com/linq-to-objects/join/Join-lambda-csharp
 
 
 //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LINQTutorialDB;Trusted_Connection=True;");

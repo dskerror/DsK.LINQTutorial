@@ -11,5 +11,7 @@ public partial class User
 
     public virtual UserAdditionalInfo? UserAdditionalInfo { get; set; }
 
+    public virtual ICollection<UserPhoneNumber> UserPhoneNumbers { get; set; } = new List<UserPhoneNumber>();
+
     public virtual ICollection<Game> Games { get; set; } = new List<Game>();
 }

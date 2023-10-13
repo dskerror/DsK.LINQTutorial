@@ -1,6 +1,4 @@
-﻿using DsK.LINQTutorial.Db;
-using DsK.LINQTutorial.Models;
-using DsK.LINQTutorial.Tests;
+﻿using DsK.LINQTutorial.Tests;
 internal class Program
 {
     private static void Main(string[] args)
@@ -13,16 +11,20 @@ internal class Program
         //StringArray.Test();
 
         //Test
-        EntitySelectAll.Test();
+        //EntitySelectAll.Test();
 
         //Test
-        EntitySelectWhere.Test();
+        //EntitySelectWhere.Test();
 
         //Test
-        //EntityJoinOneToOne.Test();
+        //EntityInnerJoinOneToOne.Test();
 
         //Test
-        //EntityJoinOneToMany.Test();
+        //EntityInnerJoinOneToMany.Test();
+
+        //Test
+        //EntityLeftJoinOneToOne.Test();
+
 
         Console.ReadLine();
     }
