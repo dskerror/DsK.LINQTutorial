@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DsK.LINQTutorial.Tests;
 public static class EntitySelectWhere
 {
-    public static void Test()
+    public static void Test(LinqtutorialDbContext db)
     {
-        using var db = new LinqtutorialDbContext();
-
         "LINQ".StartSection();
 
         var LINQ = from users in db.Users
@@ -47,7 +45,7 @@ public static class EntitySelectWhere
 
         "From SQL".StartSection();
 
-        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM User WHERE Name LIKE '%a%'");
+        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM Users WHERE Name LIKE '%a%'");
         FromSQLQuery.ToQueryString().ShowQuery();
         var FromSQLList = FromSQLQuery.ToList();
         foreach (var user in FromSQLList)

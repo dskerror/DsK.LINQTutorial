@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DsK.LINQTutorial.Tests;
 public static class EntitySelectAll
 {
-    public static void Test()
+    public static void Test(LinqtutorialDbContext db)
     {
-        using var db = new LinqtutorialDbContext();
-
         "LINQ".StartSection();
 
         var LINQ = from users in db.Users

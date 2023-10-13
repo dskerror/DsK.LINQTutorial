@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 namespace DsK.LINQTutorial.Tests;
 public static class EntityLeftJoinOneToOne
 {
-    public static void Test()
+    public static void Test(LinqtutorialDbContext db)
     {
-        using var db = new LinqtutorialDbContext();
-
         "LINQ".StartSection();
         //TODO: See if this can return Users.UserAdditionalInfo filled            
         var LINQ = from u in db.Users
