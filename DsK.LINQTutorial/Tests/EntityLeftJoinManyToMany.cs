@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DsK.LINQTutorial.Tests;
-public static class EntityInnerJoinManyToMany
+public static class EntityLeftJoinManyToMany
 {
     public static void Test(LinqtutorialDbContext db)
     {
@@ -22,10 +22,14 @@ public static class EntityInnerJoinManyToMany
         //Is actually left join but foreach turns it into inner join
         foreach (var result in LambdaList)
         {
-            foreach (var game in result.Games)
+            var FirstPart = $"Username: {result.Name.PadRight(10)}\tGame: ";
+            if (result.Games.Count > 0)
             {
-                Console.WriteLine($"Username: {result.Name.PadRight(10)}\tGame: {game.Name}");
+                foreach (var game in result.Games)
+                    Console.WriteLine($"{FirstPart}{game.Name}");
             }
+            else
+                Console.WriteLine(FirstPart);
         }
 
         "Lambda".EndSection();
@@ -47,10 +51,14 @@ public static class EntityInnerJoinManyToMany
 
         foreach (var result in FromSQLList)
         {
-            foreach (var game in result.Games)
+            var FirstPart = $"Username: {result.Name.PadRight(10)}\tGame: ";
+            if(result.Games.Count > 0)
             {
-                Console.WriteLine($"Username: {result.Name.PadRight(10)}\tGame: {game.Name}");
+                foreach (var game in result.Games)                
+                    Console.WriteLine($"{FirstPart}{game.Name}");                
             }
+            else            
+                Console.WriteLine(FirstPart);
         }
 
         "From SQL".EndSection();
@@ -63,9 +71,10 @@ public static class EntityInnerJoinManyToMany
             var sql = @"
                 SELECT a.Name, c.Name as GameName
                 FROM Users a
-                INNER JOIN UserGames b ON a.Id = b.UsersId
-                INNER JOIN Games c ON c.Id = b.GamesId
+                LEFT JOIN UserGames b ON a.Id = b.UsersId
+                LEFT JOIN Games c ON c.Id = b.GamesId
             ";
+
             
             var userGames = connection.Query<UserGamesModel>(sql).ToList();
 
@@ -84,8 +93,8 @@ public static class EntityInnerJoinManyToMany
             var sql = @"
                 SELECT a.Name, 'x' as splithere, c.Name
                 FROM Users a
-                INNER JOIN UserGames b ON a.Id = b.UsersId
-                INNER JOIN Games c ON c.Id = b.GamesId
+                LEFT JOIN UserGames b ON a.Id = b.UsersId
+                LEFT JOIN Games c ON c.Id = b.GamesId
             ";
 
             var userGames = connection.Query<User,Game,User>(sql, (user, game) => {                
@@ -96,8 +105,12 @@ public static class EntityInnerJoinManyToMany
             
             foreach (var userGame in userGames)
             {
-                foreach(var game in userGame.Games)
-                    Console.WriteLine($"Username: {userGame.Name.PadRight(10)}\tGame: {game.Name}");
+                Console.Write($"Username: {userGame.Name.PadRight(10)}\tGame: ");
+
+                foreach (var game in userGame.Games)
+                    Console.Write($"{game.Name}");
+
+                Console.WriteLine();
             }
         }
         "Dapper SplitOn".EndSection();

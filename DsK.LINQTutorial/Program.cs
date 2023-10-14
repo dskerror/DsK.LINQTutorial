@@ -9,7 +9,7 @@ internal class Program
     {
         using var db = new LinqtutorialDbContext();
 
-        //Seed.Run();
+        Seed.Run();
 
 
         //Test
@@ -20,6 +20,9 @@ internal class Program
 
         //Test
         //EntitySelectWhere.Test(db);
+
+        //Test
+        //EntitySelectWhereOrDefault.Test(db);
 
         //Test
         //EntityInnerJoinOneToOne.Test(db);
@@ -34,7 +37,10 @@ internal class Program
         //EntityLeftJoinOneToMany.Test(db);
 
         //Test
-        EntityInnerJoinManyToMany.Test(db);
+        //EntityInnerJoinManyToMany.Test(db);
+
+        //Test
+        EntityLeftJoinManyToMany.Test(db);
 
 
         Console.ReadLine();

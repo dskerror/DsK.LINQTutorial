@@ -1,5 +1,7 @@
-﻿using DsK.LINQTutorial.Helpers;
+﻿using Dapper;
+using DsK.LINQTutorial.Helpers;
 using DsK.LINQTutorial.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DsK.LINQTutorial.Tests;
@@ -46,12 +48,25 @@ public static class EntitySelectAll
 
         "From SQL".StartSection();
 
-        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM USERS");
+        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM Users");
         FromSQLQuery.ToQueryString().ShowQuery();
         var FromSQLList = FromSQLQuery.ToList();
         foreach (var user in FromSQLList)
             Console.WriteLine(user.Name);
 
         "From SQL".EndSection();
+
+
+
+        "Dapper".StartSection();
+        using (var connection = new SqlConnection(db.Database.GetConnectionString()))
+        {
+            var sql = "SELECT * FROM Users";
+            sql.ShowQuery();
+            var dapperList = connection.Query<User>(sql).ToList();
+            foreach (var user in dapperList)            
+                Console.WriteLine(user.Name);            
+        }
+        "Dapper".EndSection();
     }
 }
