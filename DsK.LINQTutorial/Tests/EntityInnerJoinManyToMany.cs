@@ -1,6 +1,9 @@
-﻿using DsK.LINQTutorial.Helpers;
+﻿using Dapper;
+using DsK.LINQTutorial.Helpers;
 using DsK.LINQTutorial.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DsK.LINQTutorial.Tests;
 public static class EntityInnerJoinManyToMany
@@ -8,59 +11,76 @@ public static class EntityInnerJoinManyToMany
     public static void Test(LinqtutorialDbContext db)
     {
         //"LINQ".StartSection();
-        
-        //var LINQ = from u in db.Users
-        //           join upn in db.UserPhoneNumbers on u.Id equals upn.UserId
-        //           select new { u = u, upn = upn };        
-
-        //LINQ.ToQueryString().ShowQuery();
-
-        //foreach (var user in LINQ)
-        //    Console.WriteLine($"Username: {user.u.Name.PadRight(10)}\tEmail: {user.upn.PhoneNumber} ");
-
+        // Couldnt find example
         //"LINQ".EndSection();
 
 
 
-        //"Lambda".StartSection();
+        "Lambda".StartSection();
+        var LambdaQuery = db.Users.Include(x => x.Games);
+        LambdaQuery.ToQueryString().ShowQuery();
+        var LambdaList = LambdaQuery.ToList();
 
-        //var LambdaQuery = db.Users.Include(x=>x.Games).Where(x=>x.Games != null);        
+        foreach (var result in LambdaList)
+        {
+            foreach (var game in result.Games)
+            {
+                Console.WriteLine($"Username: {result.Name.PadRight(10)}\tGame: {game.Name}");
+            }
+        }
 
-        //LambdaQuery.ToQueryString().ShowQuery();
-
-        //var LambdaList = LambdaQuery.ToList();
-
-        //foreach (var user in LambdaList)
-        //{
-        //    foreach (var game in user.Games)
-        //    {
-        //        Console.WriteLine($"Username: {user.Name.PadRight(10)}\tGame: {game.Name} ");
-        //    }
-        //}
-
-        //"Lambda".EndSection();
+        "Lambda".EndSection();
 
 
-        //"From SQL".StartSection();
+        "From SQL".StartSection();
+
+        var FromSQLQuery = db.Users.FromSql($"SELECT * FROM Users a");
 
         //var FromSQLQuery = db.Users.FromSql(@$"
-        //    SELECT a.Id, a.Name, b.PhoneNumber
-        //    FROM Users a 
-        //    INNER JOIN UserGames b ON a.Id = b.UserId
-        //    INNER JOIN Games c ON c.Id = b.GameId
+        //    SELECT a.Id, a.Name, c.Name as GameName
+        //    FROM Users a
+        //    INNER JOIN UserGames b ON a.Id = b.UsersId
+        //    INNER JOIN Games c ON c.Id = b.GamesId
         //    ");
-        
-        //FromSQLQuery.ToQueryString().ShowQuery();
-        //var FromSQLList = FromSQLQuery.Include(x=>x.UserPhoneNumbers).ToList();
-        
-        //foreach (var result in FromSQLList)
-        //{
-        //    foreach (var userPhoneNumber in result.UserPhoneNumbers)
-        //    {
-        //        Console.WriteLine($"Username: {user.Name.PadRight(10)}\tGame: {userPhoneNumber.PhoneNumber} ");
-        //    }
-        //}
 
-        //"From SQL".EndSection();
+        FromSQLQuery.ToQueryString().ShowQuery();
+        var FromSQLList = FromSQLQuery.Include(x => x.Games).ToList();
+
+        foreach (var result in FromSQLList)
+        {
+            foreach (var game in result.Games)
+            {
+                Console.WriteLine($"Username: {result.Name.PadRight(10)}\tGame: {game.Name}");
+            }
+        }
+
+        "From SQL".EndSection();
+
+        "Dapper".StartSection();
+        using (var connection = new SqlConnection("Server=.;Database=LINQTutorialDB;Trusted_Connection=True;Trust Server Certificate=true"))
+        {   
+            var sql = @"
+                SELECT a.Name, c.Name as GameName
+                FROM Users a
+                INNER JOIN UserGames b ON a.Id = b.UsersId
+                INNER JOIN Games c ON c.Id = b.GamesId
+            ";
+            
+            var userGames = connection.Query<UserGames>(sql).ToList();
+
+            foreach(var userGame in userGames)
+            {
+                Console.WriteLine($"Username: {userGame.Name.PadRight(10)}\tGame: {userGame.GameName}");
+            }
+        }
+        "Dapper".EndSection();
+
     }
+
+}
+
+public class UserGames
+{
+    public string Name { get; set; }
+    public string GameName { get; set; }
 }

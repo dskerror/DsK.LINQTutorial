@@ -22,6 +22,7 @@ https://www.entityframeworktutorial.net/efcore/conventions-in-ef-core.aspx
 https://www.learnentityframeworkcore.com/migrations/seeding
 https://www.tutorialsteacher.com/linq/linq-method-syntax
 https://linqsamples.com/linq-to-objects/join/Join-lambda-csharp
+https://www.learndapper.com/database-providers
 
 
 //optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=LINQTutorialDB;Trusted_Connection=True;");
